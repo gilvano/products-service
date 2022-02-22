@@ -69,11 +69,11 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.17.2"
+        artifact = "com.google.protobuf:protoc:3.17.2:osx-x86_64"
     }
     plugins {
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.39.0:osx-x86_64"
         }
     }
     generateProtoTasks {
