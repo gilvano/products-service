@@ -1,7 +1,6 @@
 package com.gilvano.services.impl
 
 import com.gilvano.dto.ProductRequest
-import com.gilvano.dto.ProductResponse
 import com.gilvano.repository.ProductRepository
 import com.gilvano.services.ProductService
 import com.gilvano.util.toDomain
