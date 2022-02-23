@@ -1,20 +1,14 @@
 package com.gilvano.resources
 
-import com.gilvano.ProductsServiceReply
-import com.gilvano.ProductsServiceRequest
-import com.gilvano.ProductsServiceServiceGrpc
+import com.gilvano.ProductServiceRequest
+import com.gilvano.ProductServiceResponse
+import com.gilvano.ProductsServiceGrpc
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
 @GrpcService
-class ProductResources : ProductsServiceServiceGrpc.ProductsServiceServiceImplBase() {
-    override fun send(request: ProductsServiceRequest?, responseObserver: StreamObserver<ProductsServiceReply>?) {
-        val toSend = "Hello, ${request?.name}"
-
-        val reply = ProductsServiceReply.newBuilder()
-            .setMessage(toSend)
-            .build()
-        responseObserver?.onNext(reply)
-        responseObserver?.onCompleted()
+class ProductResources() : ProductsServiceGrpc.ProductsServiceImplBase() {
+    override fun create(request: ProductServiceRequest?, responseObserver: StreamObserver<ProductServiceResponse>?) {
+        super.create(request, responseObserver)
     }
 }
