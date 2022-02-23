@@ -12,9 +12,9 @@ import jakarta.inject.Singleton
 class ProductServiceImpl(
     private val productRepository: ProductRepository
 ) : ProductService {
-    override fun create(request: ProductRequest): ProductResponse {
-        return productRepository.save(
-            request.toDomain()
-        ).toProductResponse()
-    }
+    override fun create(request: ProductRequest) =
+        productRepository.save(
+                            request.toDomain()
+                        ).toProductResponse()
+
 }
