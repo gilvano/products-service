@@ -13,8 +13,5 @@ class ProductServiceImpl(
     private val productRepository: ProductRepository
 ) : ProductService {
     override fun create(request: ProductRequest) =
-        productRepository.save(
-                            request.toDomain()
-                        ).toProductResponse()
-
+        productRepository.save(request.toDomain()).toProductResponse()
 }
