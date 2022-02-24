@@ -7,7 +7,7 @@ class AlreadyExistsException(private val productName: String) : BaseBusinessExce
         return "Produto $productName já cadastrado no sistema."
     }
 
-    override fun estatusCode(): Status.Code {
+    override fun statusCode(): Status.Code {
         return Status.Code.ALREADY_EXISTS
     }
 }

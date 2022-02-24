@@ -1,10 +1,12 @@
 package com.gilvano.resources
 
+import com.gilvano.FindByIdServiceRequest
 import com.gilvano.ProductServiceRequest
 import com.gilvano.ProductServiceResponse
 import com.gilvano.ProductsServiceGrpc
 import com.gilvano.dto.ProductRequest
 import com.gilvano.exceptions.BaseBusinessException
+import com.gilvano.exceptions.ProductNotFoundException
 import com.gilvano.services.ProductService
 import com.gilvano.util.ValidationUtil
 import io.grpc.stub.StreamObserver
@@ -26,7 +28,24 @@ class ProductResources(
             responseObserver?.onNext(productServiceResponse)
             responseObserver?.onCompleted()
         } catch (e: BaseBusinessException) {
-            responseObserver?.onError(e.estatusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+            responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        }
+    }
+
+    override fun findById(request: FindByIdServiceRequest?, responseObserver: StreamObserver<ProductServiceResponse>?) {
+        try {
+            val product = productService.findById(request!!.id)
+            val productResponse = ProductServiceResponse.newBuilder()
+                .setId(product.id)
+                .setName(product.name)
+                .setPrice(product.price)
+                .setQuantityInStock(product.quantityInStock)
+                .build()
+
+            responseObserver?.onNext(productResponse)
+            responseObserver?.onCompleted()
+        } catch (e: ProductNotFoundException) {
+            responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
         }
     }
 }

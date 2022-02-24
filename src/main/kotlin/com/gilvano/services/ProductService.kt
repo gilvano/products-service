@@ -6,4 +6,5 @@ import com.gilvano.dto.ProductResponse
 
 interface ProductService  {
     fun create(request: ProductRequest): ProductResponse
+    fun findById(id: Long): ProductResponse
 }
