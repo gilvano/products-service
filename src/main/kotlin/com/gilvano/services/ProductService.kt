@@ -5,5 +5,5 @@ import com.gilvano.dto.ProductRequest
 import com.gilvano.dto.ProductResponse
 
 interface ProductService  {
-    fun create(product: ProductRequest): ProductResponse
+    fun create(request: ProductRequest): ProductResponse
 }
