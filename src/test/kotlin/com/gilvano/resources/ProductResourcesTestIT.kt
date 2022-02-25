@@ -1,5 +1,6 @@
 package com.gilvano.resources
 
+import com.gilvano.Empty
 import com.gilvano.ProductServiceRequest
 import com.gilvano.ProductServiceUpdateRequest
 import com.gilvano.ProductsServiceGrpc.ProductsServiceBlockingStub
@@ -163,5 +164,15 @@ internal class ProductResourcesTestIT(
         val description = "Produto com id ${request.id} não encontrado"
         Assertions.assertEquals(Status.NOT_FOUND.code, response.status.code)
         Assertions.assertEquals(description, response.status.description)
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc findAll method is call a list of Product is returned`() {
+        val request = Empty.newBuilder().build()
+
+        val response = productsServiceBlockingStub.findAll(request)
+
+        Assertions.assertEquals("product 1", response.getProducts(0).name)
+        Assertions.assertEquals("product 2", response.getProducts(1).name)
     }
 }

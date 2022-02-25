@@ -79,4 +79,20 @@ class ProductResources(
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
         }
     }
+
+    override fun findAll(request: Empty?, responseObserver: StreamObserver<ProductsList>?) {
+        val productsList = productService.findAll().map {
+            ProductServiceResponse.newBuilder()
+                .setId(it.id)
+                .setName(it.name)
+                .setPrice(it.price)
+                .setQuantityInStock(it.quantityInStock)
+                .build()
+        }
+        val response = ProductsList.newBuilder()
+            .addAllProducts(productsList)
+            .build()
+        responseObserver?.onNext(response)
+        responseObserver?.onCompleted()
+    }
 }
