@@ -13,7 +13,7 @@ import jakarta.inject.Singleton
 
 @Singleton
 class ProductServiceImpl(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 ) : ProductService {
     override fun create(request: ProductRequest): ProductResponse {
         verifyName(request.name)
@@ -22,7 +22,7 @@ class ProductServiceImpl(
 
     override fun findById(id: Long): ProductResponse {
         val findById = productRepository.findById(id)
-        findById.orElseThrow{ ProductNotFoundException(id)}
+        findById.orElseThrow { ProductNotFoundException(id) }
         return findById.get().toProductResponse()
     }
 
@@ -37,6 +37,11 @@ class ProductServiceImpl(
         )
 
         return productRepository.update(copy).toProductResponse()
+    }
+
+    override fun delete(id: Long) {
+        productRepository.findById(id).orElseThrow { ProductNotFoundException(id) }
+        productRepository.deleteById(id)
     }
 
     private fun verifyName(name: String) {

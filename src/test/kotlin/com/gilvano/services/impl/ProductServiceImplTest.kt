@@ -9,6 +9,7 @@ import com.gilvano.repository.ProductRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrowsExactly
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import java.util.*
@@ -112,5 +113,28 @@ internal class ProductServiceImplTest {
         val productResponse = productService.update(productRequest)
 
         assertEquals(productRequest.name, productResponse.name)
+    }
+
+    @Test
+    fun `when delete method is call with valid id a Product is deleted`() {
+        val productId = 1L
+        val productOutput = Product(id = productId, name = "Product Name", price = 10.00, quantityInStock = 5)
+
+        `when`(productRepository.findById(productId)).thenReturn(Optional.of(productOutput))
+
+        assertDoesNotThrow{
+            productService.delete(productId)
+        }
+    }
+
+    @Test
+    fun `when delete method is call with invalid id, throws ProductNotFoundException`() {
+        val productId = 1L
+
+        `when`(productRepository.findById(productId)).thenReturn(Optional.empty())
+
+        assertThrowsExactly(ProductNotFoundException::class.java) {
+            productService.delete(productId)
+        }
     }
 }
