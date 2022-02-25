@@ -30,7 +30,7 @@ class ProductResources(
         }
     }
 
-    override fun findById(request: FindByIdServiceRequest?, responseObserver: StreamObserver<ProductServiceResponse>?) {
+    override fun findById(request: RequestById?, responseObserver: StreamObserver<ProductServiceResponse>?) {
         try {
             val product = productService.findById(request!!.id)
             val productResponse = ProductServiceResponse.newBuilder()

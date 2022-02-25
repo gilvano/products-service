@@ -1,9 +1,9 @@
 package com.gilvano.resources
 
-import com.gilvano.FindByIdServiceRequest
 import com.gilvano.ProductServiceRequest
 import com.gilvano.ProductServiceUpdateRequest
 import com.gilvano.ProductsServiceGrpc.ProductsServiceBlockingStub
+import com.gilvano.RequestById
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -59,7 +59,7 @@ internal class ProductResourcesTestIT(
 
     @Test
     fun `when ProductsServiceGrpc findById method is call with valid id a success is returned`() {
-        val request = FindByIdServiceRequest.newBuilder()
+        val request = RequestById.newBuilder()
             .setId(1)
             .build()
 
@@ -71,7 +71,7 @@ internal class ProductResourcesTestIT(
 
     @Test
     fun `when ProductsServiceGrpc findById method is call with invalid id a ProductNotFound is returned`() {
-        val request = FindByIdServiceRequest.newBuilder()
+        val request = RequestById.newBuilder()
             .setId(10)
             .build()
 
