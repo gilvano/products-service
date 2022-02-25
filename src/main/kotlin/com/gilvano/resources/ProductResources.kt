@@ -1,10 +1,8 @@
 package com.gilvano.resources
 
-import com.gilvano.FindByIdServiceRequest
-import com.gilvano.ProductServiceRequest
-import com.gilvano.ProductServiceResponse
-import com.gilvano.ProductsServiceGrpc
+import com.gilvano.*
 import com.gilvano.dto.ProductRequest
+import com.gilvano.dto.ProductUpdateRequest
 import com.gilvano.exceptions.BaseBusinessException
 import com.gilvano.exceptions.ProductNotFoundException
 import com.gilvano.services.ProductService
@@ -47,5 +45,23 @@ class ProductResources(
         } catch (e: ProductNotFoundException) {
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
         }
+    }
+
+    override fun update(
+        request: ProductServiceUpdateRequest?, responseObserver: StreamObserver<ProductServiceResponse>?,
+    ) {
+        val productRequest =
+            ProductUpdateRequest(
+                id = request!!.id,
+                name = request.name,
+                price = request.price,
+                quantityInStock = request.quantityInStock
+            )
+        val productResponse = productService.update(productRequest)
+        val productServiceResponse =
+            ProductServiceResponse.newBuilder().setId(productResponse.id).setName(productResponse.name)
+                .setPrice(productResponse.price).setQuantityInStock(productResponse.quantityInStock).build()
+        responseObserver?.onNext(productServiceResponse)
+        responseObserver?.onCompleted()
     }
 }

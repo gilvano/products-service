@@ -36,7 +36,7 @@ class ProductServiceImpl(
             quantityInStock = request.quantityInStock
         )
 
-        return productRepository.save(copy).toProductResponse()
+        return productRepository.update(copy).toProductResponse()
     }
 
     private fun verifyName(name: String) {
