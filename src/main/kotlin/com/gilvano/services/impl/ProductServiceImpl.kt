@@ -39,6 +39,10 @@ class ProductServiceImpl(
         return productRepository.update(copy).toProductResponse()
     }
 
+    override fun findAll(): List<ProductResponse> {
+        return productRepository.findAll().map { it.toProductResponse() }
+    }
+
     override fun delete(id: Long) {
         productRepository.findById(id).orElseThrow { ProductNotFoundException(id) }
         productRepository.deleteById(id)

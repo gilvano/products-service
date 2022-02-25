@@ -137,4 +137,31 @@ internal class ProductServiceImplTest {
             productService.delete(productId)
         }
     }
+
+    @Test
+    fun `when findAll method is call a Product list is returned`() {
+        val products = listOf(
+            Product(id = 1, name = "Product 1", price = 10.00, quantityInStock = 5),
+            Product(id = 2, name = "Product 2", price = 12.00, quantityInStock = 8)
+        )
+
+        `when`(productRepository.findAll())
+            .thenReturn(products)
+
+
+        val productResponse = productService.findAll()
+
+        assertEquals(products[0].name, productResponse[0].name)
+    }
+
+    @Test
+    fun `when findAll method is call without products a empty list of Product is returned`() {
+        val products = emptyList<Product>()
+        `when`(productRepository.findAll())
+            .thenReturn(emptyList())
+
+        val productResponse = productService.findAll()
+
+        assertEquals(products.size, productResponse.size)
+    }
 }
