@@ -69,4 +69,14 @@ class ProductResources(
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
         }
     }
+
+    override fun delete(request: RequestById?, responseObserver: StreamObserver<Empty>?) {
+        try {
+            productService.delete(request!!.id)
+            responseObserver?.onNext(Empty.newBuilder().build())
+            responseObserver?.onCompleted()
+        } catch (e: BaseBusinessException) {
+            responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        }
+    }
 }
