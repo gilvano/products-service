@@ -1,5 +1,6 @@
 package com.gilvano.resources
 
+import com.gilvano.FindByIdServiceRequest
 import com.gilvano.ProductServiceRequest
 import com.gilvano.ProductsServiceGrpc.ProductsServiceBlockingStub
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -21,7 +22,19 @@ internal class ProductResourcesTestIT(
 
         val response = productsServiceBlockingStub.create(request)
 
-        Assertions.assertEquals(1, response.id)
+        Assertions.assertEquals(2, response.id)
         Assertions.assertEquals("product name", response.name)
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc findById method is call with valid id a success is returned`() {
+        val request = FindByIdServiceRequest.newBuilder()
+            .setId(1)
+            .build()
+
+        val response = productsServiceBlockingStub.findById(request)
+
+        Assertions.assertEquals(1, response.id)
+        Assertions.assertEquals("product 1", response.name)
     }
 }
