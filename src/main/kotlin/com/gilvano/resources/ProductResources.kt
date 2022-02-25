@@ -50,19 +50,23 @@ class ProductResources(
     override fun update(
         request: ProductServiceUpdateRequest?, responseObserver: StreamObserver<ProductServiceResponse>?,
     ) {
-        val payload = ValidationUtil.validateUpdatePayload(request)
-        val productRequest =
-            ProductUpdateRequest(
-                id = payload.id,
-                name = payload.name,
-                price = payload.price,
-                quantityInStock = payload.quantityInStock
-            )
-        val productResponse = productService.update(productRequest)
-        val productServiceResponse =
-            ProductServiceResponse.newBuilder().setId(productResponse.id).setName(productResponse.name)
-                .setPrice(productResponse.price).setQuantityInStock(productResponse.quantityInStock).build()
-        responseObserver?.onNext(productServiceResponse)
-        responseObserver?.onCompleted()
+        try {
+            val payload = ValidationUtil.validateUpdatePayload(request)
+            val productRequest =
+                ProductUpdateRequest(
+                    id = payload.id,
+                    name = payload.name,
+                    price = payload.price,
+                    quantityInStock = payload.quantityInStock
+                )
+            val productResponse = productService.update(productRequest)
+            val productServiceResponse =
+                ProductServiceResponse.newBuilder().setId(productResponse.id).setName(productResponse.name)
+                    .setPrice(productResponse.price).setQuantityInStock(productResponse.quantityInStock).build()
+            responseObserver?.onNext(productServiceResponse)
+            responseObserver?.onCompleted()
+        } catch (e: BaseBusinessException) {
+            responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        }
     }
 }
