@@ -1,6 +1,7 @@
 package com.gilvano.util
 
 import com.gilvano.ProductServiceRequest
+import com.gilvano.exceptions.InvalidArgumentException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -28,7 +29,7 @@ internal class ValidationUtilTest{
             .setQuantityInStock(10)
             .build()
 
-        assertThrowsExactly(IllegalArgumentException::class.java) {
+        assertThrowsExactly(InvalidArgumentException::class.java) {
             ValidationUtil.validatePayload(request)
         }
     }
@@ -41,14 +42,14 @@ internal class ValidationUtilTest{
             .setQuantityInStock(10)
             .build()
 
-        assertThrowsExactly(IllegalArgumentException::class.java) {
+        assertThrowsExactly(InvalidArgumentException::class.java) {
             ValidationUtil.validatePayload(request)
         }
     }
 
     @Test
     fun `when validatePayload method is call with null payload, should throw exception`() {
-        assertThrowsExactly(IllegalArgumentException::class.java) {
+        assertThrowsExactly(InvalidArgumentException::class.java) {
             ValidationUtil.validatePayload(null)
         }
     }
