@@ -7,6 +7,7 @@ import com.gilvano.exceptions.BaseBusinessException
 import com.gilvano.exceptions.ProductNotFoundException
 import com.gilvano.services.ProductService
 import com.gilvano.util.ValidationUtil
+import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
@@ -27,6 +28,9 @@ class ProductResources(
             responseObserver?.onCompleted()
         } catch (e: BaseBusinessException) {
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        } catch (e: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                .withDescription("Internal Server Error").asException())
         }
     }
 
@@ -44,6 +48,9 @@ class ProductResources(
             responseObserver?.onCompleted()
         } catch (e: ProductNotFoundException) {
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        } catch (e: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                .withDescription("Internal Server Error").asException())
         }
     }
 
@@ -67,6 +74,9 @@ class ProductResources(
             responseObserver?.onCompleted()
         } catch (e: BaseBusinessException) {
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        } catch (e: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                .withDescription("Internal Server Error").asException())
         }
     }
 
@@ -77,22 +87,30 @@ class ProductResources(
             responseObserver?.onCompleted()
         } catch (e: BaseBusinessException) {
             responseObserver?.onError(e.statusCode().toStatus().withDescription(e.errorMessage()).asRuntimeException())
+        } catch (e: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                .withDescription("Internal Server Error").asException())
         }
     }
 
     override fun findAll(request: Empty?, responseObserver: StreamObserver<ProductsList>?) {
-        val productsList = productService.findAll().map {
-            ProductServiceResponse.newBuilder()
-                .setId(it.id)
-                .setName(it.name)
-                .setPrice(it.price)
-                .setQuantityInStock(it.quantityInStock)
+        try {
+            val productsList = productService.findAll().map {
+                ProductServiceResponse.newBuilder()
+                    .setId(it.id)
+                    .setName(it.name)
+                    .setPrice(it.price)
+                    .setQuantityInStock(it.quantityInStock)
+                    .build()
+            }
+            val response = ProductsList.newBuilder()
+                .addAllProducts(productsList)
                 .build()
+            responseObserver?.onNext(response)
+            responseObserver?.onCompleted()
+        } catch (e: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                .withDescription("Internal Server Error").asException())
         }
-        val response = ProductsList.newBuilder()
-            .addAllProducts(productsList)
-            .build()
-        responseObserver?.onNext(response)
-        responseObserver?.onCompleted()
     }
 }
